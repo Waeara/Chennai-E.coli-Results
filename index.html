@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Serial Checker</title>
+    <script>
+        function checkSerial() {
+            var serialNumber = document.getElementById('serial_number').value;
+            fetch('https://script.google.com/macros/s/AKfycbxHPILzJO1EEpb1YO9RFsFP6O4g6seobnZqasb2UI7ibBqRqjEgeTyj74qKELwVJz_2Ww/exec?serial=' + serialNumber)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Network response was not ok");
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    document.getElementById('result').innerText = data;
+                })
+                .catch(error => {
+                    document.getElementById('result').innerText = "Error: " + error.message;
+                });
+        }
+
+    </script>
+</head>
+<body>
+    <label for="serial_number">Enter Serial Number:</label>
+    <input type="text" id="serial_number">
+    <button onclick="checkSerial()">Check</button>
+    <div>
+        <p id="result"></p>
+    </div>
+</body>
+</html>
