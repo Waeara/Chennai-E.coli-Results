@@ -26,13 +26,34 @@ function loadClient() {
 }
 
 function execute() {
+    const serial = document.getElementById('serialNumber').value;
     return gapi.client.sheets.spreadsheets.values.get({
         "spreadsheetId": "1p-VSsfXfJ5IHlwLtUozfMbIM6bQozLu2CIn2oUsFQzg",
         "range": "Sheet1"
     })
         .then(function (response) {
-            // Displaying data to the web page
-            document.getElementById('output').innerText = JSON.stringify(response.result.values);
+            const rows = response.result.values;
+            if (!rows.length) {
+                document.getElementById('output').innerText = "No data found.";
+                return;
+            }
+            
+            const headerRow = rows[0];
+            const serialColumnIndex = headerRow.indexOf("_index");
+            
+            if (serialColumnIndex === -1) {
+                document.getElementById('output').innerText = "Serial column not found.";
+                return;
+            }
+
+            for (let i = 1; i < rows.length; i++) {
+                if (rows[i][serialColumnIndex] === serial) {
+                    document.getElementById('output').innerText = JSON.stringify(rows[i]);
+                    return;
+                }
+            }
+            
+            document.getElementById('output').innerText = "Serial number not found.";
         },
-            function (err) { console.error("Execute error", err); });
+        function (err) { console.error("Execute error", err); });
 }
