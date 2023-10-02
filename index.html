@@ -22,10 +22,20 @@
             .then(response => response.json())
             .then(data => {
                 const rows = data.values;
+
+                // Find the "_index" and result column indices
+                const indexColumn = rows[0].indexOf("_index");
+                const resultColumn = rows[0].indexOf("P/A result - *to add 24 hours after conducting the test*/e_coli");
+
+                if (indexColumn === -1 || resultColumn === -1) {
+                    document.getElementById("result").innerText = "Unable to find required columns!";
+                    return;
+                }
+
                 let found = false;
-                for (let i = 1; i < rows.length; i++) {  // Start from 1 to skip headers
-                    if (rows[i][0] === serial) {  // Assuming _index is the first column
-                        document.getElementById("result").innerText = rows[i][1];  // Assuming the result is in the second column
+                for (let i = 1; i < rows.length; i++) {
+                    if (rows[i][indexColumn] === serial) {
+                        document.getElementById("result").innerText = rows[i][resultColumn];
                         found = true;
                         break;
                     }
