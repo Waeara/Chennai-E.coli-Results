@@ -3,13 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <title>Serial Number Checker</title>
+    <style>
+        /* Styles for centering and improving the appearance */
+        body {
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f6f6f6;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+        button {
+            margin-top: 10px;
+        }
+        #result {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
 
-<input type="text" id="serialNumber" placeholder="Enter Serial Number">
-<button onclick="fetchResult()">Check</button>
-
-<p id="result"></p>
+<div class="container">
+    <h2>Serial Number Checker</h2>
+    <p>Enter the provided serial number below to get the result:</p>
+    <input type="text" id="serialNumber" placeholder="Enter Serial Number">
+    <button onclick="fetchResult()">Check</button>
+    <p id="result"></p>
+</div>
 
 <script>
     function fetchResult() {
@@ -35,7 +65,15 @@
                 let found = false;
                 for (let i = 1; i < rows.length; i++) {
                     if (rows[i][indexColumn] === serial) {
-                        document.getElementById("result").innerText = rows[i][resultColumn];
+                        // Map the result to the corresponding message
+                        let message = '';
+                        switch(rows[i][resultColumn]) {
+                            case '0': message = "No E. coli was found in your water."; break;
+                            case '1': message = "We found E. coli in your water."; break;
+                            default: message = "Unknown result."; break;
+                        }
+
+                        document.getElementById("result").innerText = message;
                         found = true;
                         break;
                     }
@@ -45,6 +83,7 @@
                 }
             });
     }
+
 </script>
 
 </body>
