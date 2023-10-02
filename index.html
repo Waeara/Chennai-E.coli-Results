@@ -1,47 +1,15 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <title>Serial Checker</title>
-    <script>
-        const API_KEY = 'AIzaSyCbe7LGT_zNgdlAkgNyOiI65HWKlL5VYiY'; // Replace with your actual API key
-        const SPREADSHEET_ID = '1p-VSsfXfJ5IHlwLtUozfMbIM6bQozLu2CIn2oUsFQzg'; // Get this from your sheet URL
-
-        function checkSerial() {
-            const serialNumber = document.getElementById('serial_number').value;
-            const RANGE = 'Sheet1'; // Adjust if your sheet has a different name
-
-            fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${RANGE}?key=${API_KEY}`)
-                .then(response => response.json())
-                .then(data => {
-                    const rows = data.values;
-                    const headers = rows[0];
-                    const serialIndex = headers.indexOf("_index");
-                    const dataIndex = headers.indexOf("P/A result - *to add 24 hours after conducting the test*/e_coli");
-                    
-                    for(let i = 1; i < rows.length; i++) {
-                        if(rows[i][serialIndex] == serialNumber) {
-                            document.getElementById('result').innerText = rows[i][dataIndex];
-                            return;
-                        }
-                    }
-                    document.getElementById('result').innerText = "Serial number not found.";
-                })
-                .catch(error => {
-                    console.error("An error occurred:", error);
-                    document.getElementById('result').innerText = "An error occurred. Check console for details.";
-                });
-        }
-    </script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Sheets Fetcher</title>
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="script.js" defer></script>
 </head>
-
-<body>
-    <label for="serial_number">Enter Serial Number:</label>
-    <input type="text" id="serial_number">
-    <button onclick="checkSerial()">Check</button>
-    <div>
-        <p id="result"></p>
-    </div>
+<body onload="init()">
+    <button onclick="handleAuthClick()">Authorize and Fetch Data</button>
+    <div id="output"></div>
 </body>
-
 </html>
