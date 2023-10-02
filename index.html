@@ -5,17 +5,25 @@
     <script>
         function checkSerial() {
             var serialNumber = document.getElementById('serial_number').value;
-            fetch('/.netlify/functions/checkSerial?serial=' + serialNumber)
-                .then(response => response.json())
+
+            // Directly using the GAS URL
+            const GAS_URL = `https://script.google.com/macros/s/AKfycbz6_z08K43KV4hf-y5IPfdaPYy36znmaaDz0U_6OV3y11An8-erbKkJRaik6RMgYm4dsA/exec?serial=${serialNumber}`;
+
+            fetch(GAS_URL)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.text();
+                })
                 .then(data => {
-                    document.getElementById('result').innerText = data.message;
+                    document.getElementById('result').innerText = data;
                 })
                 .catch(error => {
                     console.error("An error occurred:", error);
                     document.getElementById('result').innerText = "An error occurred. Check console for details.";
                 });
         }
-
     </script>
 </head>
 <body>
