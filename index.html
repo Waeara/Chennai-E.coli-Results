@@ -5,7 +5,7 @@
     <script>
         function checkSerial() {
             var serialNumber = document.getElementById('serial_number').value;
-            fetch('/.netlify/checkSerial?serial=' + serialNumber)
+            fetch('/.Netlify/checkSerial?serial=' + serialNumber)
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById('result').innerText = data.message;
