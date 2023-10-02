@@ -2,16 +2,40 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Sheets Fetcher</title>
-    <script src="https://apis.google.com/js/api.js"></script>
-    <script src="script.js" defer></script>
+    <title>Serial Number Checker</title>
 </head>
-<body onload="init()">
-    <label for="serialNumber">Enter Serial Number:</label>
-    <input type="text" id="serialNumber" placeholder="Enter serial number">
-    <button onclick="handleAuthClick()">Authorize and Fetch Data</button>
-    <div id="output"></div>
+<body>
+
+<input type="text" id="serialNumber" placeholder="Enter Serial Number">
+<button onclick="fetchResult()">Check</button>
+
+<p id="result"></p>
+
+<script>
+    function fetchResult() {
+        const serial = document.getElementById("serialNumber").value;
+        const apiKey = 'AIzaSyCbe7LGT_zNgdlAkgNyOiI65HWKlL5VYiY';  // Replace with your API key
+        const sheetId = '1p-VSsfXfJ5IHlwLtUozfMbIM6bQozLu2CIn2oUsFQzg';  // Replace with your sheet ID
+        const apiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Sheet1?key=${apiKey}`;
+
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                const rows = data.values;
+                let found = false;
+                for (let i = 1; i < rows.length; i++) {  // Start from 1 to skip headers
+                    if (rows[i][0] === serial) {  // Assuming _index is the first column
+                        document.getElementById("result").innerText = rows[i][1];  // Assuming the result is in the second column
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    document.getElementById("result").innerText = "Serial number not found!";
+                }
+            });
+    }
+</script>
+
 </body>
 </html>
